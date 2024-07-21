@@ -18,20 +18,24 @@ app.use(
 );
 
 app.use("/customer/auth/*", function auth(req, res, next) {
-	// const token = req.headers["authorization"]?.split(" ")[1];
-	const token = req.headers["authorization"];
-
-	if (token) {
-		jwt.verify(token, "fingerprint_customer", (err, user) => {
-			if (err) {
-				return res.status(403).json({ message: "Invalid token" });
-			}
-			req.user = user;
-			next();
-		});
+	if(req.session && req.session.authorization) {
+		const token = req.session["authorization"];
+		
+		if (token) {
+			jwt.verify(token, "fingerprint_customer", (err, user) => {
+				if (err) {
+					return res.status(403).json({ message: "Invalid token" });
+				}
+				req.user = user;
+				next();
+			});
+		} else {
+			return res.status(401).json({ message: "No token provided" });
+		}
 	} else {
-		return res.status(401).json({ message: "No token provided" });
+		return res.status(401).json({ message: "User not logged in" });
 	}
+
 });
 
 const PORT = 5000;

@@ -1,17 +1,18 @@
 const express = require('express');
 let books = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
+let userAlreadyExists = require("./auth_users.js").userAlreadyExists;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
 
 // Register a new costumer
 public_users.post("/register", function (req, res) {
-  const username = req.body.username;
-  const password = req.body.password;
+  const {username, password } = req.body;
 
   if (username && password) {
-      if (isValid(username)) {
-          users.push({"username":username,"password":password});
+      if (!userAlreadyExists(username)) {
+          users.push({ username: username, password: password });
+          
           return res.status(200).json({message:`User ${username} Registered Successfully`});
       }
       else {
@@ -23,6 +24,7 @@ public_users.post("/register", function (req, res) {
   }
 });
 
+// Promise to get the book list available
 function getAllBooks() {
   return new Promise((resolve, reject) => {
     resolve(books);
