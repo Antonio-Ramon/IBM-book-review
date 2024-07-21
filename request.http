@@ -1,0 +1,36 @@
+### VARIABLES
+@apiurl = http://localhost:5000
+
+### GET ALL BOOKS
+GET {{apiurl}}/
+
+### GET BOOK BY ISBN
+GET {{apiurl}}/isbn/1
+
+### GET BOOK BY AUTHOR
+GET {{apiurl}}/author/unknown
+
+### GET BOOK BY TITLE
+GET {{apiurl}}/title/Things Fall Apart
+
+### GET BOOK REVIEW BY ISBN
+GET {{apiurl}}/review/1
+
+### REGISTER A NEW USER
+POST {{apiurl}}/register
+Content-Type: application/json
+
+{ "username": "adm", "password":"ibm" }
+
+### LOGIN USER
+POST {{apiurl}}/customer/login
+Content-Type: application/json
+
+{ "username": "adm", "password":"ibm" }
+
+### LOGIN USER
+PUT {{apiurl}}/customer/auth/review/1
+Content-Type: application/json
+
+{ "review": "Amazing book, makes you travel to imagination!" }
+
