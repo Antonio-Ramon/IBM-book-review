@@ -43,71 +43,76 @@ public_users.get('/', async (req, res) => {
 });
 
 // Get book details based on ISBN
-public_users.get('/isbn/:isbn', async (req, res) => {
-  const ISBN = req.params.isbn;
-
-  try {
-    const books = await getAllBooks();
-
-    if(books[ISBN] !== undefined && books[ISBN] !== null) {
-      const find_book = books[ISBN]
-      res.status(200).send(JSON.stringify(find_book));
-    } else {
-      throw new Error("Book not found");
+public_users.get('/isbn/:isbn', (req, res) => {
+  return new Promise( async (resolve, reject) => {
+    const ISBN = req.params.isbn;
+  
+    try {
+      const books = await getAllBooks();
+  
+      if(books[ISBN] !== undefined && books[ISBN] !== null) {
+        const find_book = books[ISBN]
+        resolve(res.status(200).send(JSON.stringify(find_book)));
+      } else {
+        throw new Error("Book not found");
+      }
+    } catch (error) {
+      resolve(res.status(404).json({ 'error': error.message }));
     }
-  } catch (error) {
-    res.status(404).json({ 'error': error.message });
-  }
+  })
  });
   
 // Get book details based on author
-public_users.get('/author/:author', async (req, res) => {
-  const AUTHOR = req.params.author.toLowerCase();
-  const finded_books = [];
-
-  try {
-    const books = await getAllBooks();
-
-    for (const [key, value] of Object.entries(books)) {
-      if (value.author.toLowerCase() === AUTHOR) {
-        finded_books.push(value)
+public_users.get('/author/:author', (req, res) => {
+  return new Promise( async (resolve, reject) => {
+    const AUTHOR = req.params.author.toLowerCase();
+    const finded_books = [];
+  
+    try {
+      const books = await getAllBooks();
+  
+      for (const [key, value] of Object.entries(books)) {
+        if (value.author.toLowerCase() === AUTHOR) {
+          finded_books.push(value)
+        }
       }
+  
+      if(finded_books.length > 0) {
+        resolve(res.status(200).send(JSON.stringify(finded_books)))
+      } else {
+        throw new Error("Author not found");
+      }
+      
+    } catch (error) {
+      resolve(res.status(404).send(JSON.stringify({'error': error.message})));
     }
-
-    if(finded_books.length > 0) {
-      res.status(200).send(JSON.stringify(finded_books))
-    } else {
-      throw new Error("Author not found");
-    }
-    
-  } catch (error) {
-    res.status(404).send(JSON.stringify({'error': error.message}));
-  }
+  })
 });
 
 // Get all books based on title
-public_users.get('/title/:title', async (req, res) => {
-  const TITLE = req.params.title.toLowerCase();
-
-  try {
-    const books = await getAllBooks();
-    let finded_book = '';
-
-    for (const [key, value] of Object.entries(books)) {
-      if (value.title.toLowerCase() === TITLE) {
-        finded_book = value;
-      }
-    }
-    if(finded_book !== undefined) {
-      res.status(200).send(JSON.stringify(finded_book));
-    } else {
-      throw new Error("Book not found")
-    }
-
-  } catch (error) {
-    res.status(404).send(JSON.stringify({ 'error': error.message }));
-  }
+public_users.get('/title/:title', (req, res) => {
+  return new Promise( async (resolve, reject) => {
+    const TITLE = req.params.title.toLowerCase();
   
+    try {
+      const books = await getAllBooks();
+      let finded_book = '';
+  
+      for (const [key, value] of Object.entries(books)) {
+        if (value.title.toLowerCase() === TITLE) {
+          finded_book = value;
+        }
+      }
+      if(finded_book !== undefined) {
+        resolve(res.status(200).send(JSON.stringify(finded_book)));
+      } else {
+        throw new Error("Book not found")
+      }
+  
+    } catch (error) {
+      resolve(res.status(404).send(JSON.stringify({ 'error': error.message })));
+    }
+  })
 });
 
 //  Get book review

@@ -20,17 +20,20 @@ GET {{apiurl}}/review/1
 POST {{apiurl}}/register
 Content-Type: application/json
 
-{ "username": "adm", "password":"ibm" }
+{ "username": "adm2", "password":"ibm" }
 
 ### LOGIN USER
 POST {{apiurl}}/customer/login
 Content-Type: application/json
 
-{ "username": "adm", "password":"ibm" }
+{ "username": "adm2", "password":"ibm" }
 
-### LOGIN USER
+### ADD A REVIEW
 PUT {{apiurl}}/customer/auth/review/1
 Content-Type: application/json
 
-{ "review": "Amazing book, makes you travel to imagination!" }
+{ "review": "Awesome Book, for all family!" }
+//{ "review": "Amazing book, makes you travel to imagination!" }
 
+### ADD A REVIEW
+DELETE {{apiurl}}/customer/auth/review/1
